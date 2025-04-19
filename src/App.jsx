@@ -2,11 +2,12 @@ import { useState } from 'react';
 import Form from './components/Form';
 import Question from './components/Question';
 
+
 import './App.css';
 
 function App() {
   const [projectName, setProjectName] = useState("");
-  const [forms, setForms] = useState([]);
+  const [forms, setForms] = useState([]); 
 
   const handleAddForm = () => {
     setForms(prevForms => [...prevForms, { id: Date.now() }]);
@@ -43,10 +44,12 @@ function App() {
         <div className="max-w-4xl mx-auto">
           {forms.map(form => (
             <div key={form.id} >
-              <Form />
+              <Form 
+              value={projectName}/>
             </div>
           ))}
         </div>
+        
       </div>
     </div>
   );

@@ -1,20 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Option from './Options';
 
-function Question({ questionId }) {
+function Question({ questionId, onUpdate }) {
   const [type, setType] = useState('radio');
   const [showOptions, setShowOptions] = useState(true);
+  const [question, setQuestion] = useState("");
+  const [options, setOptions] = useState([{ text: "" }]);
+
+  useEffect(() => {
+    // Notify parent component when question data changes
+    onUpdate && onUpdate({
+      text: question,
+      type: type,
+      options: type === "radio" ? options : []
+    });
+  }, [question, type, options, onUpdate]);
+
+  function handleQuestion(event) {
+    setQuestion(event.target.value);
+  }
 
   function handleType(event) {
     const selectedType = event.target.value;
     setType(selectedType);
     
-   
     if (selectedType === "radio") {
       setShowOptions(true);
     } else {
       setShowOptions(false);
     }
+  }
+
+  function addOption() {
+    setOptions([...options, { text: "" }]);
+  }
+
+  function updateOption(index, value) {
+    const updatedOptions = [...options];
+    updatedOptions[index] = { text: value };
+    setOptions(updatedOptions);
   }
 
   return (
@@ -24,6 +48,8 @@ function Question({ questionId }) {
           type="text"
           className="w-1/2 h-10 rounded-xl border bg-gray-300 p-2 absolute left-0 ml-3"
           placeholder="Write the Question"
+          value={question}
+          onChange={handleQuestion}
         />
         <select
           name="Qtype"
@@ -37,12 +63,32 @@ function Question({ questionId }) {
           <option value="file">File</option>
         </select>
 
-        
         <div className="mt-16 pt-4">
           {type === "radio" && (
             <div className="radio-options">
-              <Option type="radio" placeholder="Radio option" />
-              <button className="bg-purple-300 px-4 py-2 rounded-lg mt-2">Add Option</button>
+              {options.map((option, index) => (
+                <div key={index} className="mb-2">
+                  <input 
+                    type="radio" 
+                    name={`question-${questionId}`} 
+                    disabled 
+                    className="mr-2" 
+                  />
+                  <input
+                    type="text"
+                    className="bg-gray-200 w-4/5 h-10 rounded-xl p-2"
+                    placeholder={`Option ${index + 1}`}
+                    value={option.text}
+                    onChange={(e) => updateOption(index, e.target.value)}
+                  />
+                </div>
+              ))}
+              <button 
+                className="bg-purple-300 px-4 py-2 rounded-lg mt-2"
+                onClick={addOption}
+              >
+                Add Option
+              </button>
             </div>
           )}
           
