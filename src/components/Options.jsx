@@ -1,15 +1,38 @@
-import React from "react";
+import React from 'react';
 
-function Option(props) {
+const Options = ({ type, placeholder }) => {
+  if (type === 'text') {
     return (
-        <div className="my-2">
-            <input 
-                className="bg-gray-200 w-full h-10 rounded-xl p-2" 
-                type={props.type}
-                placeholder={props.placeholder || `Enter ${props.type} value`} 
-            />
-        </div>
+      <input
+        type="text"
+        placeholder={placeholder || "Text answer here"}
+        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+        disabled
+      />
     );
-}
+  }
 
-export default Option;
+  if (type === 'date') {
+    return (
+      <input
+        type="date"
+        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+        disabled
+      />
+    );
+  }
+
+  if (type === 'file') {
+    return (
+      <input
+        type="file"
+        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+        disabled
+      />
+    );
+  }
+
+  return null;
+};
+
+export default Options;
